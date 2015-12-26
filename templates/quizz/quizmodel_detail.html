@@ -1,0 +1,16 @@
+<title>{{ quiz.title }}</title>
+
+
+{% block content %}
+    <h2>{{ quiz.title }}</h2>
+    <h3>{{ quiz.category }}</h3>
+
+    <p>{{ quiz.description }}</p>
+    <p>{{ url }}</p>
+    <p>
+        {% for q in questions %}
+            <p>{{ q.id }}</p>
+            <p>{{ q.get_answers }}<p>
+        {% endfor %}
+        </p>
+{% endblock %}
