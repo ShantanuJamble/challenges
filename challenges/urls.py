@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-import mcqs
-from mcqs.views import MCQDetailView, MCQListView
+from mcqs.views import MCQDetailView, MCQListView, QuizTake
 from quizz.views import QuizDetailView, QuizListView
 
 urlpatterns = patterns('',
@@ -18,5 +17,5 @@ urlpatterns = patterns('',
                        url(r'^mcqs/$', MCQListView.as_view(), name='mcq_list'),
 
                        #QuizTake
-                       url(r'^quiz/(?P<quiz>[-_\w]+)/(?P<username>[-_\w]+)/$', mcqs.views.quiz_take, name='quiz_take')
+                       url(r'^quiz/(?P<quiz>[-_\w]+)/(?P<username>[-_\w]+)/$', QuizTake.as_view(), name='quiz_take')
 )
