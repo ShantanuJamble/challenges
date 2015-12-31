@@ -1,6 +1,5 @@
 from django import forms
 from django.forms.widgets import RadioSelect
-
 from .models import MCQuestion
 
 class QuestionForm(forms.Form):

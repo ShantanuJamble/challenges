@@ -52,7 +52,8 @@ class MCQuestion(Question):
 
     # quiz = models.ManyToManyField(QuizModel)
 
-    def check_if_correct(self, guess):
+    @staticmethod
+    def check_if_correct(guess):
         answer = Answer.objects.get(id=guess)
 
         if answer.correct is True:
@@ -60,7 +61,10 @@ class MCQuestion(Question):
         else:
             return False
 
-    def get_correct_ans(self, ):
+    def get_answers_count(self):
+        return Answer.objects.filter(question=self).count()
+
+    def get_correct_ans(self):
         answer = Answer.objects.filter(question=self)
         for ans in answer:
             if ans.correct is True:
@@ -86,7 +90,7 @@ class MCQuestion(Question):
         return Answer.objects.get(id=guess).content
 
     def get_absolute_url(self):
-        return '/mcqs/'+str(self.id)+'/'
+        return '/mcqs/' + str(self.id) + '/'
 
     class Meta:
         verbose_name = _("Multiple Choice Question")
@@ -117,28 +121,25 @@ class Answer(models.Model):
 
 
 class SittingManager(models.Manager):
-    def new_sitting(self, user, quiz):
+    def new_sitting(self, quiz, user):
+        quiz = QuizModel.objects.get(title=quiz)
         if quiz.random_order is True:
             questions = MCQuestion.objects.all().filter(quiz=quiz).order_by('?')
         else:
             questions = MCQuestion.objects.all().filter(quiz=quiz).order_by('id')
-
         question_set = ''
-
         for question in questions:
-            question_set = question_set + question.id + ','
-
-        print question_set
+            question_set = question_set + str(question.id) + ','
         new_sitting = self.create(user=user,
                                   quiz=quiz,
-                                  questions_order=question_set,
+                                  question_order=question_set,
                                   question_set=question_set,
-                                  )
+        )
 
         return new_sitting
 
     def user_sitting(self, user, quiz):
-        if quiz.single_attempt is True and self.filter(user=user,quiz=quiz,complete=True).exists():
+        if quiz.single_attempt is True and self.filter(user=user, quiz=quiz, complete=True).exists():
             return False
         try:
             sitting = self.get(user=user, quiz=quiz, complete=False)
@@ -175,4 +176,4 @@ class Sitting(models.Model):
     objects = SittingManager()
 
     def __str__(self):
-        return str(self.user)+str(self.quiz.title)
+        return str(self.user) + str(self.quiz.title)

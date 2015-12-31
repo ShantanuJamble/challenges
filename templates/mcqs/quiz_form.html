@@ -3,8 +3,62 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Quiz_form</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+        $(document).ready(function () {
+            alert(" " + csrftoken.toString());
+        });
+
+        function get_question(question_id) {
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "/mcqs/" + question_id.toString() + '/',
+                    data: {"quiz":$("h4").text() },
+                    success: updateQuestion,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'html'
+                });
+                //alert($("#search").val());
+            }
+            return false;
+        }
+
+        function updateQuestion(data, status, jqXHR) {
+            alert(data);
+            $("#question_details").html(data);
+        }
+
+    </script>
 </head>
 <body>
+<h3>{{ quiz }}</h3>
+<h4>{{ new_sitting.quiz_id }}</h4>
+{% for question in question_set %}
+    <button id="button" onclick="get_question({{ question }})">Question {{ forloop.counter }}</button>
+{% endfor %}
+<div id="question_details">
+</div>
+
 
 </body>
 </html>

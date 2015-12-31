@@ -89,6 +89,9 @@ class QuizModel(models.Model):
     def get_absolute_url(self):
         return '/quiz/' + str(self.url) + '/'
 
+    def is_question_order_random(self):
+        return self.random_order
+
 
 
 
