@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
 # Create your models here.
@@ -122,6 +123,7 @@ class Answer(models.Model):
 
 class SittingManager(models.Manager):
     def new_sitting(self, quiz, user):
+        print user
         quiz = QuizModel.objects.get(title=quiz)
         if quiz.random_order is True:
             questions = MCQuestion.objects.all().filter(quiz=quiz).order_by('?')
@@ -134,8 +136,7 @@ class SittingManager(models.Manager):
                                   quiz=quiz,
                                   question_order=question_set,
                                   question_set=question_set,
-        )
-
+                                  )
         return new_sitting
 
     def user_sitting(self, user, quiz):

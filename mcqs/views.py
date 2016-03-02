@@ -42,11 +42,12 @@ def get_mcq(request, slug):
         sitting = sitting.first()
         marks = sitting.score
     except:
-        print 'It isnt getting the sitting object'
+        sitting = Sitting.objects.create(user=request.user, quiz_id=quiz)
+        sitting.save()
         marks = 0
+    print sitting
     print answers
     print marks
-
     data = ''
     if len(answers) == 1:
         print request.is_ajax()
