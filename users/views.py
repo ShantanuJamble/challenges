@@ -12,13 +12,10 @@ def redirect_to_profile(request):
 
 
 def home(request):
-    if request.user.is_authenticated():
-        return HttpResponseRedirect('logged_in')
     return render_to_response('loginform.html', {}, context_instance=RequestContext(request))
 
 
 def login_handler(request):
-
     if request.method == 'POST':
         form = LoginForm(request.POST)
         print form.is_valid()

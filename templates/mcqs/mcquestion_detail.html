@@ -1,7 +1,4 @@
-<!--
-    We were trying to figure out a way to get the checkbox input
--->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script>
     function getCookie(name) {
         var cookieValue = null;
@@ -20,63 +17,42 @@
     }
 
     var csrftoken = getCookie('csrftoken');
-    $(document).ready(function () {
-        // alert(" " + csrftoken.toString());
-
-    });
-    function foo() {
-        alert($("#quiz").text());
-    }
-    function get_user_answer() {
-        //alert("fuck you");
-        var answer = $("#qform input[type='radio']:checked").val();
-        // var marks=($("#answer_accepted").val()).toString();
-        alert($("#quiz").text());
-        $.ajax({
-            type: "POST",
-            url: "/mcqs/{{ question.id }}/",
-            data: {"answers": answer}
-            success: successfunction,
-            headers: {'X-CSRFToken': csrftoken},
-            dataType: 'json'
-        });
-
-        return false;
+    function getUserAnswer() {
+        var ans = validate();
+        if (ans != null) {
+            $.ajax({
+                type: "POST",
+                url: "/checkans/{{ question.id }}/",
+                data: {"choice": ans},
+                success: successfunction,
+                headers: {'X-CSRFToken': csrftoken},
+                dataType: 'json'
+            });
+        }
     }
     function successfunction(data, status, jqXHR) {
-
-        alert(data.marks);
-        alert("You are so awesome tantya!! ");
         $("#answer_accepted").text(data.marks);
     }
+    function validate() {
+        var radios;
+        var i;
+        var choice = null;
+        radios = document.getElementById("options").getElementsByTagName("input");
+        for (i = 0; i < radios.length; i++) {
+            if (radios[i].checked == true) {
+                choice = radios[i].value;
+            }
+        }
+        return choice;
+    }
 </script>
-{{ question.content }}
-<br>
-{{ question.get_answers_list }}
-<br>
-{{ question.explanation }}
-<br>
-{{ question.get_correct_ans }}
-<br>
-{{ question.get_answers_count }}
-<br>
-<p id='quiz'>{{ quiz }}</p>
-<input type="button" onclick="foo()" value="submit">
-<form method="post" id="qform">
-    {% csrf_token %}
-    <input type=hidden name="question_id" value="{{ question.id }}">
-
-    <ul>
-
-        {% for answer in form.answers %}
-            <li id="options_{{ forloop.counter }}">
-                {{ answer }}
-            </li>
-        {% endfor %}
-    </ul>
-    <input type="button" onclick="get_user_answer()" value="submit">
-
-    <p id="answer_accepted">
-        0
-    </p>
-</form>
+<div id="answer_accepted">
+    0
+</div>
+<h2>{{ question }}</h2>
+<div id="options">
+    {% for option in options %}
+        <input type="radio" value={{ option }} name="option" id="option">{{ option }}<br>
+    {% endfor %}
+</div>
+<input type="button" onclick="getUserAnswer()" value="Submit">

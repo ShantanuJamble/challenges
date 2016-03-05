@@ -15,7 +15,8 @@ urlpatterns = patterns('',
                        url(r'^quiz/(?P<slug>[-_\w]+)/$', QuizDetailView.as_view(), name='quiz_detials'),
                        url(r'^quiz/$', QuizListView.as_view(), name='quiz_list'),
                        # MCQURLS
-                       #url(r'^mcqs/(?P<slug>\d)/$', mcqs.views.get_mcq, name='mcq_detail'),
+                       url(r'^mcqs/(?P<slug>\d)/$', mcqs.views.get_mcq, name='mcq_detail'),
+                       url(r'^checkans/(?P<slug>\d)/$', mcqs.views.accept_answer, name='check_answer'),
                        url(r'^mcqs/$', MCQListView.as_view(), name='mcq_list'),
 
                        # QuizTake

@@ -27,7 +27,7 @@ class MCQListView(ListView):
     model = MCQuestion
 
 
-def get_mcq(request, slug):
+'''def get_mcq(request, slug):
     question = MCQuestion.objects.get(id=slug)
     form = QuestionForm(question)
     answers = request.POST.getlist('answers')
@@ -70,6 +70,29 @@ def get_mcq(request, slug):
         else:
             marks = marks
     return render_to_response('mcqs/mcquestion_detail.html', locals(), context_instance=RequestContext(request))
+'''
+
+
+def get_mcq(request, slug):
+    question = MCQuestion.objects.get(id=slug)
+    options = question.get_answers()
+    return render_to_response('mcqs/mcquestion_detail.html', locals(), context_instance=RequestContext(request))
+
+
+def accept_answer(request, slug):
+    marks = 0
+    if request.method == 'POST':
+        question = MCQuestion.objects.get(id=slug)
+        user_answer = request.POST.get('choice')
+        if question.check_if_correct(user_answer):
+            marks += 1
+        else:
+            marks = 0
+    else:
+        marks = 0
+    jason_data = json.dumps({'marks': marks})
+    print jason_data
+    return HttpResponse(jason_data, content_type="application/json")
 
 
 def quiz_take(request, quiz, username):

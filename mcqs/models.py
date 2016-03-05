@@ -55,7 +55,7 @@ class MCQuestion(Question):
 
     @staticmethod
     def check_if_correct(guess):
-        answer = Answer.objects.get(id=guess)
+        answer = Answer.objects.get(content=guess)
 
         if answer.correct is True:
             return True
