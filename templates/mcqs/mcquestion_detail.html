@@ -19,6 +19,7 @@
     var csrftoken = getCookie('csrftoken');
     function getUserAnswer() {
         var ans = validate();
+        alert(ans);
         if (ans != null) {
             $.ajax({
                 type: "POST",
@@ -49,10 +50,11 @@
 <div id="answer_accepted">
     0
 </div>
+<h1>{{ question.id }}</h1>
 <h2>{{ question }}</h2>
 <div id="options">
     {% for option in options %}
-        <input type="radio" value={{ option }} name="option" id="option">{{ option }}<br>
+        <input type="radio" value="{{ option }}" name="option" id="option">{{ option }}<br>
     {% endfor %}
 </div>
 <input type="button" onclick="getUserAnswer()" value="Submit">

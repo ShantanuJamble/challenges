@@ -91,7 +91,6 @@ def accept_answer(request, slug):
     else:
         marks = 0
     jason_data = json.dumps({'marks': marks})
-    print jason_data
     return HttpResponse(jason_data, content_type="application/json")
 
 

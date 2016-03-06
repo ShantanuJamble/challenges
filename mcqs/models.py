@@ -51,12 +51,15 @@ class MCQuestion(Question):
                     "to the user"),
         verbose_name=_("Answer Order"))
 
-    # quiz = models.ManyToManyField(QuizModel)
-
-    @staticmethod
-    def check_if_correct(guess):
-        answer = Answer.objects.get(content=guess)
-
+    def check_if_correct(self, guess):
+        print 'zhat'
+        print guess
+        answer = 'fucker'
+        try:
+            answer = self.get_answers()
+            answer = answer.get(content=guess)
+        except Answer.DoesNotExist:
+            print Answer.DoesNotExist
         if answer.correct is True:
             return True
         else:
@@ -136,7 +139,7 @@ class SittingManager(models.Manager):
                                   quiz=quiz,
                                   question_order=question_set,
                                   question_set=question_set,
-                                  )
+        )
         return new_sitting
 
     def user_sitting(self, user, quiz):
