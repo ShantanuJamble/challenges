@@ -76,6 +76,9 @@ class QuizModel(models.Model):
                                        help_text=_("Display the questions in "
                                                    "a random order or as they "
                                                    "are set?"))
+    single_attempt = models.BooleanField(blank=False, default=False, verbose_name=_("Single Attempt"),
+                                         help_text=_("Only one chance to "
+                                                     "attempt the quiz"))
 
     unique_together = ("title", "url")
 

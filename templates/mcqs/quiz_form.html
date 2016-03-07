@@ -38,19 +38,19 @@
                     },
                     dataType: 'html'
                 });
-                //alert($("#search").val());
+
             }
             return false;
         }
 
         function updateQuestion(data, status, jqXHR) {
-            alert(data);
             $("#question_details").html(data);
         }
 
     </script>
 </head>
 <body>
+{% if allowed  %}
 <h3>{{ quiz }}</h3>
 <h4>{{ new_sitting.quiz_id }}</h4>
 {% for question in question_set %}
@@ -58,7 +58,9 @@
 {% endfor %}
 <div id="question_details">
 </div>
-
+{% else %}
+    {{ message }}
+{% endif %}
 
 </body>
 </html>

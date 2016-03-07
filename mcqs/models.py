@@ -125,9 +125,9 @@ class Answer(models.Model):
 
 
 class SittingManager(models.Manager):
-    def new_sitting(self, quiz, user):
+    def new_sitting(self, user, quiz):
         print user
-        quiz = QuizModel.objects.get(title=quiz)
+        quiz = QuizModel.objects.get(url=quiz)
         if quiz.random_order is True:
             questions = MCQuestion.objects.all().filter(quiz=quiz).order_by('?')
         else:
@@ -143,10 +143,12 @@ class SittingManager(models.Manager):
         return new_sitting
 
     def user_sitting(self, user, quiz):
+        quiz = QuizModel.objects.get(url=quiz)
         if quiz.single_attempt is True and self.filter(user=user, quiz=quiz, complete=True).exists():
             return False
         try:
             sitting = self.get(user=user, quiz=quiz, complete=False)
+            print sitting.user
         except Sitting.DoesNotExist:
             sitting = self.new_sitting(user, quiz)
         except Sitting.MultipleObjectsReturned:
