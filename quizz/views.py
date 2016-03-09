@@ -29,7 +29,7 @@ def quiz_take(request, quiz):
     if request.user.is_authenticated():
         new_sitting = None
         new_sitting = Sitting.objects.user_sitting(request.user, quiz)
-        if new_sitting == False:
+        if not new_sitting:
             allowed = False
             message = 'U have completed the test already!'
         else:

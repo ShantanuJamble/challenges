@@ -24,7 +24,8 @@
             $.ajax({
                 type: "POST",
                 url: "/checkans/{{ question.id }}/",
-                data: {"choice": ans},
+                data: {"choice": ans,
+                    "sitting_id": $("#sitting_id").text()},
                 success: successfunction,
                 headers: {'X-CSRFToken': csrftoken},
                 dataType: 'json'
@@ -47,8 +48,9 @@
         return choice;
     }
 </script>
+<h3 id="sitting_id">{{ new_sitting }}</h3>
 <div id="answer_accepted">
-    0
+    {{ marks }}
 </div>
 <h1>{{ question.id }}</h1>
 <h2>{{ question }}</h2>

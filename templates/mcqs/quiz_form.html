@@ -23,7 +23,7 @@
 
         var csrftoken = getCookie('csrftoken');
         $(document).ready(function () {
-            alert(" " + csrftoken.toString());
+            alert();
         });
 
         function get_question(question_id) {
@@ -31,7 +31,8 @@
                 $.ajax({
                     type: "POST",
                     url: "/mcqs/" + question_id.toString() + '/',
-                    data: {"quiz": $("h4").text() },
+                    data: {"quiz": $("h4").text(),
+                        "sitting_id": $("#sitting_id").text()},
                     success: updateQuestion,
                     headers: {
                         'X-CSRFToken': csrftoken
@@ -50,14 +51,14 @@
     </script>
 </head>
 <body>
-{% if allowed  %}
-<h3>{{ quiz }}</h3>
-<h4>{{ new_sitting.quiz_id }}</h4>
-{% for question in question_set %}
-    <button id="button" onclick="get_question({{ question }})">Question {{ forloop.counter }}</button>
-{% endfor %}
-<div id="question_details">
-</div>
+{% if allowed %}
+    <h3 id="sitting_id" >{{ new_sitting }}</h3>
+    <h4>{{ new_sitting.quiz_id }}</h4>
+    {% for question in question_set %}
+        <button id="button" onclick="get_question({{ question }})">Question {{ forloop.counter }}</button>
+    {% endfor %}
+    <div id="question_details">
+    </div>
 {% else %}
     {{ message }}
 {% endif %}

@@ -29,6 +29,13 @@ class MCQListView(ListView):
 
 def get_mcq(request, slug):
     question = MCQuestion.objects.get(id=slug)
+    sitting_id = request.POST.get('sitting_id')
+    marks = 0
+    try:
+        sitting = Sitting.objects.get(id=sitting_id)
+        marks = sitting.score
+    except:
+        marks=0
     options = question.get_answers()
     return render_to_response('mcqs/mcquestion_detail.html', locals(), context_instance=RequestContext(request))
 
@@ -38,17 +45,22 @@ def accept_answer(request, slug):
     if request.method == 'POST':
         question = MCQuestion.objects.get(id=slug)
         user_answer = request.POST.get('choice')
+        sitting_id = request.POST.get('sitting_id')
+        sitting = Sitting.objects.get(id=sitting_id)
+        print 1
+        print sitting.score
+        marks = int(sitting.score)
+        print marks
         if question.check_if_correct(user_answer):
             marks += 1
         else:
-            marks = 0
+            marks = marks
+        sitting.score = marks
+        sitting.save()
     else:
-        marks = 0
+        marks = marks
     jason_data = json.dumps({'marks': marks})
     return HttpResponse(jason_data, content_type="application/json")
-
-
-
 
 
 class SittingDetailView(DetailView):

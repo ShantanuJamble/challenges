@@ -52,8 +52,6 @@ class MCQuestion(Question):
         verbose_name=_("Answer Order"))
 
     def check_if_correct(self, guess):
-        print 'zhat'
-        print guess
         answer = 'fucker'
         try:
             answer = self.get_answers()
@@ -126,7 +124,6 @@ class Answer(models.Model):
 
 class SittingManager(models.Manager):
     def new_sitting(self, user, quiz):
-        print user
         quiz = QuizModel.objects.get(url=quiz)
         if quiz.random_order is True:
             questions = MCQuestion.objects.all().filter(quiz=quiz).order_by('?')
@@ -148,7 +145,6 @@ class SittingManager(models.Manager):
             return False
         try:
             sitting = self.get(user=user, quiz=quiz, complete=False)
-            print sitting.user
         except Sitting.DoesNotExist:
             sitting = self.new_sitting(user, quiz)
         except Sitting.MultipleObjectsReturned:
@@ -182,4 +178,4 @@ class Sitting(models.Model):
     objects = SittingManager()
 
     def __str__(self):
-        return str(self.user) + str(self.quiz.title)
+        return str(self.id)
