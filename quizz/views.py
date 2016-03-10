@@ -25,7 +25,6 @@ class QuizListView(ListView):
 
 
 def quiz_take(request, quiz):
-    print quiz
     if request.user.is_authenticated():
         new_sitting = None
         new_sitting = Sitting.objects.user_sitting(request.user, quiz)
@@ -33,7 +32,7 @@ def quiz_take(request, quiz):
             allowed = False
             message = 'U have completed the test already!'
         else:
-            allowed=True
+            allowed = True
             questions = str(new_sitting.question_order)
             questions = questions.split(',')
             question_set = []

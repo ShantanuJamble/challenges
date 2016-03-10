@@ -35,7 +35,7 @@ def get_mcq(request, slug):
         sitting = Sitting.objects.get(id=sitting_id)
         marks = sitting.score
     except:
-        marks=0
+        marks = 0
     options = question.get_answers()
     return render_to_response('mcqs/mcquestion_detail.html', locals(), context_instance=RequestContext(request))
 
@@ -47,10 +47,7 @@ def accept_answer(request, slug):
         user_answer = request.POST.get('choice')
         sitting_id = request.POST.get('sitting_id')
         sitting = Sitting.objects.get(id=sitting_id)
-        print 1
-        print sitting.score
         marks = int(sitting.score)
-        print marks
         if question.check_if_correct(user_answer):
             marks += 1
         else:

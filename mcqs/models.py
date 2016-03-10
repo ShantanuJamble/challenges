@@ -124,18 +124,20 @@ class Answer(models.Model):
 
 class SittingManager(models.Manager):
     def new_sitting(self, user, quiz):
-        quiz = QuizModel.objects.get(url=quiz)
         if quiz.random_order is True:
             questions = MCQuestion.objects.all().filter(quiz=quiz).order_by('?')
         else:
             questions = MCQuestion.objects.all().filter(quiz=quiz).order_by('id')
         question_set = ''
+        answers_set = ''
         for question in questions:
             question_set = question_set + str(question.id) + ','
+            answers_set = answers_set + str(0) + ','
+
         new_sitting = self.create(user=user,
                                   quiz=quiz,
                                   question_order=question_set,
-                                  question_set=question_set,
+                                  answers_set=answers_set,
         )
         return new_sitting
 
@@ -161,15 +163,12 @@ class Sitting(models.Model):
     question_order = models.CommaSeparatedIntegerField(max_length=1024, blank=True, null=True,
                                                        verbose_name="Questions_Order")
 
-    # for current remaining questions
-    question_set = models.CommaSeparatedIntegerField(max_length=1024, blank=True, null=True,
-                                                     verbose_name="Questions_List")
-
     # Has Quiz been completed
     complete = models.BooleanField(default=False, blank=False, verbose_name=_("Complete"))
 
     # Answers by user
-    answers_set = models.TextField(default='{}', blank=True, verbose_name="User's Answers")
+    answers_set = models.CommaSeparatedIntegerField(max_length=1024, default=None, blank=True,
+                                                    verbose_name="User's Answers")
 
     # Score
 
