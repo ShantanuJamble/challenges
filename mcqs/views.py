@@ -50,19 +50,19 @@ def accept_answer(request, slug):
         marks = int(sitting.score)
         question_set = list(sitting.question_order)  # [int(x) for x in sitting.question_order.split(',')]
         answer_set = list(sitting.answers_set)
-        if answer_set[question_set.index(str(question.id))] == '1':
-            pass
+        index = question_set.index(str(question.id))
+        if question.check_if_correct(user_answer):
+            marks += 1
+            answer_set[index] = '1'
         else:
-            if question.check_if_correct(user_answer):
-                marks += 1
-                print 1
-                answer_set[question_set.index(str(question.id))] = '1'
-                sitting.answers_set = ''.join(answer_set)
-                print sitting.answers_set
+            if answer_set[index] == '1':
+                marks -= 1
             else:
                 marks = marks
-            sitting.score = marks
-            sitting.save()
+            answer_set[index] = '0'
+        sitting.answers_set = ''.join(answer_set)
+        sitting.score = marks
+        sitting.save()
     else:
         marks = marks
     jason_data = json.dumps({'marks': marks})
