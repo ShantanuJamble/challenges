@@ -38,7 +38,7 @@ def quiz_take(request, quiz):
             question_set = []
             index = 0
             question_count = len(questions)
-            while index < question_count - 1:
+            while index < question_count:
                 question_set.append(int(questions[index]))
                 index += 1
     else:

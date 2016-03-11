@@ -123,6 +123,17 @@ class Answer(models.Model):
 
 
 class SittingManager(models.Manager):
+    def format_string(self, answers_set, question_set):
+        question_set = question_set.encode('ascii')
+        answers_set = answers_set.encode('ascii')
+        question_set = list(question_set)
+        answers_set = list(answers_set)
+        answers_set[- 1] = ''
+        question_set[- 1] = ''
+        question_set = ''.join(question_set)
+        answers_set = ''.join(answers_set)
+        return answers_set, question_set
+
     def new_sitting(self, user, quiz):
         if quiz.random_order is True:
             questions = MCQuestion.objects.all().filter(quiz=quiz).order_by('?')
@@ -133,9 +144,8 @@ class SittingManager(models.Manager):
         for question in questions:
             question_set = question_set + str(question.id) + ','
             answers_set = answers_set + str(0) + ','
-        print type(question_set)
-        answers_set[len(answers_set) - 1] = ''
-        question_set[len(answers_set) - 1] = ''
+        answers_set, question_set = self.format_string(answers_set, question_set)
+        print answers_set, question_set
         new_sitting = self.create(user=user,
                                   quiz=quiz,
                                   question_order=question_set,

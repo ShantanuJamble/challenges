@@ -48,18 +48,21 @@ def accept_answer(request, slug):
         sitting_id = request.POST.get('sitting_id')
         sitting = Sitting.objects.get(id=sitting_id)
         marks = int(sitting.score)
-        question_set = [int(x) for x in sitting.question_order.split(',')]
-        answer_set = [int(x) for x in sitting.answers_set.split(',')]
-        #bhau te last comma udwaycha bagha jara
-        print type(question_set)
-        print type(answer_set)
-        #print question_set.index('2')
-        if question.check_if_correct(user_answer):
-            marks += 1
+        question_set = list(sitting.question_order)  # [int(x) for x in sitting.question_order.split(',')]
+        answer_set = list(sitting.answers_set)
+        if answer_set[question_set.index(str(question.id))] == '1':
+            pass
         else:
-            marks = marks
-        sitting.score = marks
-        sitting.save()
+            if question.check_if_correct(user_answer):
+                marks += 1
+                print 1
+                answer_set[question_set.index(str(question.id))] = '1'
+                sitting.answers_set = ''.join(answer_set)
+                print sitting.answers_set
+            else:
+                marks = marks
+            sitting.score = marks
+            sitting.save()
     else:
         marks = marks
     jason_data = json.dumps({'marks': marks})
