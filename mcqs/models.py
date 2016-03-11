@@ -133,7 +133,9 @@ class SittingManager(models.Manager):
         for question in questions:
             question_set = question_set + str(question.id) + ','
             answers_set = answers_set + str(0) + ','
-
+        print type(question_set)
+        answers_set[len(answers_set) - 1] = ''
+        question_set[len(answers_set) - 1] = ''
         new_sitting = self.create(user=user,
                                   quiz=quiz,
                                   question_order=question_set,

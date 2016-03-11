@@ -48,6 +48,12 @@ def accept_answer(request, slug):
         sitting_id = request.POST.get('sitting_id')
         sitting = Sitting.objects.get(id=sitting_id)
         marks = int(sitting.score)
+        question_set = [int(x) for x in sitting.question_order.split(',')]
+        answer_set = [int(x) for x in sitting.answers_set.split(',')]
+        #bhau te last comma udwaycha bagha jara
+        print type(question_set)
+        print type(answer_set)
+        #print question_set.index('2')
         if question.check_if_correct(user_answer):
             marks += 1
         else:
