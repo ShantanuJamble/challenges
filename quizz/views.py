@@ -1,5 +1,6 @@
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
+from django.utils import timezone
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from .models import QuizModel, Category, SubCategory  # Sitting
@@ -26,6 +27,20 @@ class QuizListView(ListView):
 
 def quiz_take(request, quiz):
     if request.user.is_authenticated():
+        quiz = QuizModel.objects.get(url=quiz)
+        now = timezone.now()
+        start = quiz.start_time
+        end = quiz.end_time
+        if now < start and now < end:
+            print 1
+            message = "Register"
+        else:
+            if now > start:
+                message = "Started"
+            if now > end:
+                message = "Ended"
+            if now < start:
+                message = "Participated"
         new_sitting = None
         new_sitting = Sitting.objects.user_sitting(request.user, quiz)
         if not new_sitting:
@@ -46,3 +61,5 @@ def quiz_take(request, quiz):
         message = 'Dude you aren\'t logged in'
 
     return render_to_response('mcqs/quiz_form.html', locals(), context_instance=RequestContext(request))
+
+#Register method for quiz

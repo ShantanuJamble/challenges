@@ -23,7 +23,6 @@
 
         var csrftoken = getCookie('csrftoken');
         $(document).ready(function () {
-            alert();
         });
 
         function get_question(question_id) {
@@ -51,17 +50,39 @@
     </script>
 </head>
 <body>
-{% if allowed %}
-    <h3 id="sitting_id" >{{ new_sitting }}</h3>
-    <h4>{{ new_sitting.quiz_id }}</h4>
-    {% for question in question_set %}
-        <button id="button" onclick="get_question({{ question }})">Question {{ forloop.counter }}</button>
-    {% endfor %}
-    <div id="question_details">
-    </div>
-{% else %}
-    {{ message }}
-{% endif %}
 
+{% ifequal message 'register' %}
+    <a href='/register/'>
+        <button class='button'>Register</button>
+    </a>
+{% else %}
+    {% ifequal message 'Participated' %}
+        <div class="alert alert-success">Paricipated</div>
+    {% else %}
+        {% ifequal message 'Started' %}
+            <div class="alert alert-info">Competition Started</div>
+        {% else %}
+            {% ifequal message 'Ended' %}
+                <div class="alert alert-info">Ended</div>
+            {% else %}
+                {{ message }}
+            {% endifequal %}
+        {% endifequal %}
+    {% endifequal %}
+{% endifequal %}
+{% ifequal message 'Started' %}
+
+    {% if allowed %}
+        <h3 id="sitting_id">{{ new_sitting }}</h3>
+        <h4>{{ new_sitting.quiz_id }}</h4>
+        {% for question in question_set %}
+            <button id="button" onclick="get_question({{ question }})">Question {{ forloop.counter }}</button>
+        {% endfor %}
+        <div id="question_details">
+        </div>
+    {% else %}
+        {{ message }}
+    {% endif %}
+{% endifequal %}
 </body>
 </html>
