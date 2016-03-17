@@ -10,10 +10,10 @@ urlpatterns = patterns('',
                        # Examples:
                        url(r'^$', 'users.views.home', name='home'),
                        # url(r'^blog/', include('blog.urls')),
-                    
+
                        url(r'^admin/', include(admin.site.urls)),
                        # QuizUrl
-                       #url(r'^quiz/(?P<slug>[-_\w]+)/$', QuizDetailView.as_view(), name='quiz_detials'),
+                       # url(r'^quiz/(?P<slug>[-_\w]+)/$', QuizDetailView.as_view(), name='quiz_detials'),
                        url(r'^quiz/$', QuizListView.as_view(), name='quiz_list'),
                        # MCQURLS
                        url(r'^mcqs/(?P<slug>\d)/$', mcqs.views.get_mcq, name='mcq_detail'),
@@ -23,6 +23,7 @@ urlpatterns = patterns('',
                        # QuizTake
                        #url(r'^quiz/(?P<quiz>[-_\w]+)/(?P<username>[-_\w]+)/$', mcqs.views.quiz_take, name='quiz_take'),
                        url(r'^quiz/(?P<quiz>[-_\w]+)/$', quizz.views.quiz_take, name='quiz_take'),
+                       url(r'^register/(?P<challenge_name>.*)/$', quizz.views.register),
 
                        # sitting view
                        url(r'^sitting/(?P<id>\d)/$', SittingDetailView.as_view(), name='sitting_details'),

@@ -3,6 +3,7 @@ import re
 import json
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -79,9 +80,10 @@ class QuizModel(models.Model):
     single_attempt = models.BooleanField(blank=False, default=False, verbose_name=_("Single Attempt"),
                                          help_text=_("Only one chance to "
                                                      "attempt the quiz"))
-    start_time = models.DateTimeField(help_text="Event start Time", blank=False, null=True,default=None)
-    end_time = models.DateTimeField(help_text="Event End Time", blank=False, null=True,default=None)
-    duration = models.IntegerField(help_text="Event Duration in minuets", blank=False, null=True,default=None)
+    start_time = models.DateTimeField(help_text="Event start Time", blank=False, null=True, default=None)
+    end_time = models.DateTimeField(help_text="Event End Time", blank=False, null=True, default=None)
+    duration = models.IntegerField(help_text="Event Duration in minuets", blank=False, null=True, default=None)
+    participents = models.ManyToManyField(User, blank=True, null=True)
     unique_together = ("title", "url")
 
     class Meta:

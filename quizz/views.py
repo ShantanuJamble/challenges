@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.utils import timezone
@@ -32,7 +33,6 @@ def quiz_take(request, quiz):
         start = quiz.start_time
         end = quiz.end_time
         if now < start and now < end:
-            print 1
             message = "Register"
         else:
             if now > start:
@@ -62,4 +62,14 @@ def quiz_take(request, quiz):
 
     return render_to_response('mcqs/quiz_form.html', locals(), context_instance=RequestContext(request))
 
-#Register method for quiz
+
+# Register method for quiz
+def register(request, quiz_id):
+    print 'i am in'
+    if request.user.is_authenticated():
+        quiz = QuizModel.objects.get(id=quiz_id)
+        quiz.participants.add(request.user)
+        quiz.save()
+        return HttpResponseRedirect(quiz.get_absolute_url())
+    else:
+        pass

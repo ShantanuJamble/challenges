@@ -50,20 +50,18 @@
     </script>
 </head>
 <body>
-
+<a href="#">asdgbhasdgk </a>
 {% ifequal message 'register' %}
-    <a href='/register/'>
-        <button class='button'>Register</button>
-    </a>
+        <a href='register/{{ quiz }}'>{{ message }}</a>
 {% else %}
     {% ifequal message 'Participated' %}
-        <div class="alert alert-success">Paricipated</div>
+        <div >Paricipated</div>
     {% else %}
         {% ifequal message 'Started' %}
-            <div class="alert alert-info">Competition Started</div>
+            <div >Competition Started</div>
         {% else %}
             {% ifequal message 'Ended' %}
-                <div class="alert alert-info">Ended</div>
+                <div >Ended</div>
             {% else %}
                 {{ message }}
             {% endifequal %}
