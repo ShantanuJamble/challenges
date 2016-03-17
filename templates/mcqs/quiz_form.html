@@ -50,18 +50,18 @@
     </script>
 </head>
 <body>
-<a href="#">asdgbhasdgk </a>
-{% ifequal message 'register' %}
-        <a href='register/{{ quiz }}'>{{ message }}</a>
+{{ count }}
+{% ifequal message 'Register' %}
+    <a href='/register/{{ quiz.id }}'>{{ message }}</a>
 {% else %}
     {% ifequal message 'Participated' %}
-        <div >Paricipated</div>
+        <div>Paricipated</div>
     {% else %}
         {% ifequal message 'Started' %}
-            <div >Competition Started</div>
+            <div>Competition Started</div>
         {% else %}
             {% ifequal message 'Ended' %}
-                <div >Ended</div>
+                <div>Ended</div>
             {% else %}
                 {{ message }}
             {% endifequal %}

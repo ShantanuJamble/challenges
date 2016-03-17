@@ -83,7 +83,7 @@ class QuizModel(models.Model):
     start_time = models.DateTimeField(help_text="Event start Time", blank=False, null=True, default=None)
     end_time = models.DateTimeField(help_text="Event End Time", blank=False, null=True, default=None)
     duration = models.IntegerField(help_text="Event Duration in minuets", blank=False, null=True, default=None)
-    participents = models.ManyToManyField(User, blank=True, null=True)
+    participants = models.ManyToManyField(User, blank=True, null=True)
     unique_together = ("title", "url")
 
     class Meta:

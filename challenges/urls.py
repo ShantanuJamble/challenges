@@ -23,7 +23,7 @@ urlpatterns = patterns('',
                        # QuizTake
                        #url(r'^quiz/(?P<quiz>[-_\w]+)/(?P<username>[-_\w]+)/$', mcqs.views.quiz_take, name='quiz_take'),
                        url(r'^quiz/(?P<quiz>[-_\w]+)/$', quizz.views.quiz_take, name='quiz_take'),
-                       url(r'^register/(?P<challenge_name>.*)/$', quizz.views.register),
+                       url(r'^register/(?P<quiz_id>\d)/$', quizz.views.register),
 
                        # sitting view
                        url(r'^sitting/(?P<id>\d)/$', SittingDetailView.as_view(), name='sitting_details'),

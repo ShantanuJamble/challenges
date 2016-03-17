@@ -29,10 +29,15 @@ class QuizListView(ListView):
 def quiz_take(request, quiz):
     if request.user.is_authenticated():
         quiz = QuizModel.objects.get(url=quiz)
+        try:
+            user = quiz.participants.get(username=request.user.username)
+        except Exception:
+            user = None
         now = timezone.now()
         start = quiz.start_time
         end = quiz.end_time
-        if now < start and now < end:
+        count = quiz.participants.count()
+        if user is None and now < start and now < end:
             message = "Register"
         else:
             if now > start:
@@ -67,9 +72,12 @@ def quiz_take(request, quiz):
 def register(request, quiz_id):
     print 'i am in'
     if request.user.is_authenticated():
-        quiz = QuizModel.objects.get(id=quiz_id)
-        quiz.participants.add(request.user)
-        quiz.save()
-        return HttpResponseRedirect(quiz.get_absolute_url())
+        try:
+            quiz = QuizModel.objects.get(id=quiz_id)
+            quiz.participants.add(request.user)
+            quiz.save()
+            return HttpResponseRedirect(quiz.get_absolute_url())
+        except QuizModel.DoesNotExist:
+            print 'Quiz Object not found'
     else:
         pass
