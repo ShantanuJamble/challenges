@@ -100,9 +100,15 @@ class QuizModel(models.Model):
         return self.random_order
 
 
+@python_2_unicode_compatible
+class UserSessions(models.Model):
+    user = models.OneToOneField(User, blank=False, null=False)
+    quiz = models.OneToOneField(QuizModel, blank=False, null=False)
+    start_time = models.DateTimeField(help_text="Participant End Time", blank=False, null=True, default=None)
+    end_time = models.DateTimeField(help_text="Participant End Time", blank=False, null=True, default=None)
 
-
-
+    def __str__(self):
+        return self.user+'  '+self.quiz
 
 
 
