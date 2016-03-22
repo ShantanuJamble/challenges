@@ -51,6 +51,8 @@
 </head>
 <body>
 {{ count }}
+{{ allowed }}
+<h3 id="sitting_id">{{ new_sitting }}</h3>
 {% ifequal message 'Register' %}
     <a href='/register/{{ quiz.id }}'>{{ message }}</a>
 {% else %}
@@ -58,7 +60,7 @@
         <div>Paricipated</div>
     {% else %}
         {% ifequal message 'Started' %}
-            <div>Competition Started</div>
+            <a href='/start/{{ quiz.id }}'>Start Quiz</a>
         {% else %}
             {% ifequal message 'Ended' %}
                 <div>Ended</div>
@@ -68,19 +70,16 @@
         {% endifequal %}
     {% endifequal %}
 {% endifequal %}
-{% ifequal message 'Started' %}
-
-    {% if allowed %}
-        <h3 id="sitting_id">{{ new_sitting }}</h3>
-        <h4>{{ new_sitting.quiz_id }}</h4>
-        {% for question in question_set %}
-            <button id="button" onclick="get_question({{ question }})">Question {{ forloop.counter }}</button>
-        {% endfor %}
-        <div id="question_details">
-        </div>
-    {% else %}
-        {{ message }}
-    {% endif %}
-{% endifequal %}
+{% if allowed %}
+    <h3 id="sitting_id">{{ new_sitting }}</h3>
+    <h4>{{ new_sitting.quiz_id }}</h4>
+    {% for question in question_set %}
+        <button id="button" onclick="get_question({{ question }})">Question {{ forloop.counter }}</button>
+    {% endfor %}
+    <div id="question_details">
+    </div>
+{% else %}
+    {{ message }}
+{% endif %}
 </body>
 </html>

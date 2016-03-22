@@ -1,10 +1,11 @@
+from datetime import datetime, timedelta
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.utils import timezone
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from .models import QuizModel, Category, SubCategory  # Sitting
+from .models import QuizModel, Category, SubCategory, UserSessions  # Sitting
 from mcqs.models import Question, MCQuestion, Sitting
 
 
@@ -26,6 +27,34 @@ class QuizListView(ListView):
     context_object_name = 'quiz_list'
 
 
+def start_quiz(request, quiz_id):
+    new_sitting = None
+    quiz = QuizModel.objects.get(id=quiz_id)
+    new_sitting = Sitting.objects.user_sitting(request.user, quiz)
+    if not new_sitting:
+        allowed = False
+        message = 'U have completed the test already!'
+    else:
+        allowed = True
+        questions = str(new_sitting.question_order)
+        questions = questions.split(',')
+        try:
+            session, created = UserSessions.objects.get_or_create(user=request.user, quiz=quiz, )
+            session.start_time = datetime.now()
+            session.end_time = datetime.now() + timedelta(minutes=int(quiz.duration))
+            session.save()
+        except:
+            print "Session Object creation failed"
+            allowed = False
+        question_set = []
+        index = 0
+        question_count = len(questions)
+        while index < question_count:
+            question_set.append(int(questions[index]))
+            index += 1
+    return render_to_response('mcqs/quiz_form.html', locals(), context_instance=RequestContext(request))
+
+
 def quiz_take(request, quiz):
     if request.user.is_authenticated():
         quiz = QuizModel.objects.get(url=quiz)
@@ -33,11 +62,12 @@ def quiz_take(request, quiz):
             user = quiz.participants.get(username=request.user.username)
         except Exception:
             user = None
+        print user is None
         now = timezone.now()
         start = quiz.start_time
         end = quiz.end_time
         count = quiz.participants.count()
-        if user is None and now < start and now < end:
+        if user is None and start <= now < end:
             message = "Register"
         else:
             if now > start:
@@ -46,21 +76,7 @@ def quiz_take(request, quiz):
                 message = "Ended"
             if now < start:
                 message = "Participated"
-        new_sitting = None
-        new_sitting = Sitting.objects.user_sitting(request.user, quiz)
-        if not new_sitting:
-            allowed = False
-            message = 'U have completed the test already!'
-        else:
-            allowed = True
-            questions = str(new_sitting.question_order)
-            questions = questions.split(',')
-            question_set = []
-            index = 0
-            question_count = len(questions)
-            while index < question_count:
-                question_set.append(int(questions[index]))
-                index += 1
+                # start_quiz(quiz, request)
     else:
         allowed = False
         message = 'Dude you aren\'t logged in'

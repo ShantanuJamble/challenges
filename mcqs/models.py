@@ -79,7 +79,8 @@ class MCQuestion(Question):
             return queryset.order_by('?')
         if self.answer_order == 'none':
             return queryset.order_by()
-        return queryset
+        else:
+            return queryset.order_by()
 
     def get_answers(self):
         return self.order_answers(Answer.objects.filter(question=self))
@@ -145,7 +146,7 @@ class SittingManager(models.Manager):
             question_set = question_set + str(question.id) + ','
             answers_set = answers_set + str(0) + ','
         answers_set, question_set = self.format_string(answers_set, question_set)
-        print answers_set, question_set
+        # print answers_set, question_set
         new_sitting = self.create(user=user,
                                   quiz=quiz,
                                   question_order=question_set,

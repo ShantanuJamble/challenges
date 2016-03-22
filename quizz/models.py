@@ -102,14 +102,16 @@ class QuizModel(models.Model):
 
 @python_2_unicode_compatible
 class UserSessions(models.Model):
-    user = models.OneToOneField(User, blank=False, null=False)
-    quiz = models.OneToOneField(QuizModel, blank=False, null=False)
-    start_time = models.DateTimeField(help_text="Participant End Time", blank=False, null=True, default=None)
+    user = models.ForeignKey(User, blank=False, null=True, unique=False)
+    quiz = models.ForeignKey(QuizModel, blank=False, null=True, unique=False)
+    start_time = models.DateTimeField(help_text="Participant Start Time", blank=False, null=True, default=None)
     end_time = models.DateTimeField(help_text="Participant End Time", blank=False, null=True, default=None)
 
-    def __str__(self):
-        return self.user+'  '+self.quiz
+    class meta:
+        unique_together = {"user", "quiz"}
 
+    def __str__(self):
+        return str(self.user) + '  ' + str(self.quiz)
 
 
 
