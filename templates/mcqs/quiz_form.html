@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -23,6 +24,9 @@
 
         var csrftoken = getCookie('csrftoken');
         $(document).ready(function () {
+            time={{ milliseconds }};
+            start_countdown({{ milliseconds }});
+
         });
 
         function get_question(question_id) {
@@ -60,7 +64,7 @@
         <div>Paricipated</div>
     {% else %}
         {% ifequal message 'Started' %}
-            <a href='/start/{{ quiz.id }}'>Start Quiz</a>
+            <a href='/start/{{ quiz.id }}' onclick="foo('')">Start Quiz</a>
         {% else %}
             {% ifequal message 'Ended' %}
                 <div>Ended</div>
@@ -71,6 +75,12 @@
     {% endifequal %}
 {% endifequal %}
 {% if allowed %}
+    <div id="countdown" title="countdown">
+        <span class="days">00</span>:
+        <span class="hours">00</span>:
+        <span class="minuits">00</span>:
+        <span class="seconds">00</span>
+    </div>
     <h3 id="sitting_id">{{ new_sitting }}</h3>
     <h4>{{ new_sitting.quiz_id }}</h4>
     {% for question in question_set %}
@@ -82,4 +92,7 @@
     {{ message }}
 {% endif %}
 </body>
+
+<script type="text/javascript" src="{% static 'js/ext.js'%}"></script>
+<script type="text/javascript" src="{% static 'js/countdown.jquery.js'%}"></script>
 </html>

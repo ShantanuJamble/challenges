@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import time
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
@@ -42,6 +43,7 @@ def start_quiz(request, quiz_id):
             session, created = UserSessions.objects.get_or_create(user=request.user, quiz=quiz, )
             session.start_time = datetime.now()
             session.end_time = datetime.now() + timedelta(minutes=int(quiz.duration))
+            milliseconds=time.mktime(session.end_time.timetuple())*1000
             session.save()
         except:
             print "Session Object creation failed"
@@ -62,7 +64,6 @@ def quiz_take(request, quiz):
             user = quiz.participants.get(username=request.user.username)
         except Exception:
             user = None
-        print user is None
         now = timezone.now()
         start = quiz.start_time
         end = quiz.end_time
