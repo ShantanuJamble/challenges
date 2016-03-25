@@ -186,6 +186,8 @@ class Sitting(models.Model):
 
     score = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name="Score")
 
+    start_time = models.DateTimeField(help_text="Participant Start Time", blank=False, null=True, default=None)
+    end_time = models.DateTimeField(help_text="Participant End Time", blank=False, null=True, default=None)
     objects = SittingManager()
 
     def __str__(self):

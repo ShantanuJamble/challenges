@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from .models import QuizModel, Category, SubCategory, UserSessions
+from .models import QuizModel, Category, SubCategory
 # Register your models here.
 
 class QuizAdmin(admin.ModelAdmin):
@@ -25,4 +25,3 @@ class SubCategoryAdmin(admin.ModelAdmin):
 admin.site.register(QuizModel, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(SubCategory, SubCategoryAdmin)
-admin.site.register(UserSessions)

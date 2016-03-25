@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.utils import timezone
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from .models import QuizModel, Category, SubCategory, UserSessions  # Sitting
+from .models import QuizModel
 from mcqs.models import Question, MCQuestion, Sitting
 
 
@@ -40,11 +40,10 @@ def start_quiz(request, quiz_id):
         questions = str(new_sitting.question_order)
         questions = questions.split(',')
         try:
-            session, created = UserSessions.objects.get_or_create(user=request.user, quiz=quiz, )
-            session.start_time = datetime.now()
-            session.end_time = datetime.now() + timedelta(minutes=int(quiz.duration))
-            milliseconds=time.mktime(session.end_time.timetuple())*1000
-            session.save()
+            new_sitting.start_time = datetime.now()
+            new_sitting.end_time = datetime.now() + timedelta(minutes=int(quiz.duration))
+            milliseconds = time.mktime(new_sitting.end_time.timetuple()) * 1000
+            new_sitting.save()
         except:
             print "Session Object creation failed"
             allowed = False
