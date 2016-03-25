@@ -155,10 +155,11 @@ class SittingManager(models.Manager):
         return new_sitting
 
     def user_sitting(self, user, quiz):
+        # if you want to allow only one chance to user
         if quiz.single_attempt is True and self.filter(user=user, quiz=quiz, complete=True).exists():
             return False
         try:
-            sitting = self.get(user=user, quiz=quiz, complete=False)
+            sitting = self.get(user=user, quiz=quiz)
         except Sitting.DoesNotExist:
             sitting = self.new_sitting(user, quiz)
         except Sitting.MultipleObjectsReturned:

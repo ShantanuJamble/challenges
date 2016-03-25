@@ -25,7 +25,7 @@
         var csrftoken = getCookie('csrftoken');
         $(document).ready(function () {
             time={{ milliseconds }};
-            start_countdown({{ milliseconds }});
+            start_countdown({{ milliseconds }},{{ quiz.id}});
 
         });
 
@@ -64,12 +64,10 @@
         <div>Paricipated</div>
     {% else %}
         {% ifequal message 'Started' %}
-            <a href='/start/{{ quiz.id }}' onclick="foo('')">Start Quiz</a>
+            <a href='/start/{{ quiz.id }}'>Start Quiz</a>
         {% else %}
             {% ifequal message 'Ended' %}
                 <div>Ended</div>
-            {% else %}
-                {{ message }}
             {% endifequal %}
         {% endifequal %}
     {% endifequal %}
@@ -88,6 +86,9 @@
     {% endfor %}
     <div id="question_details">
     </div>
+    <center>
+        <a href="/end/{{ quiz.id }}">End Quiz</a>
+    </center>
 {% else %}
     {{ message }}
 {% endif %}

@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from .models import QuizModel
-from mcqs.models import Question, MCQuestion, Sitting
+from mcqs.models import MCQuestion, Sitting
 
 
 class QuizDetailView(DetailView):
@@ -40,10 +40,22 @@ def start_quiz(request, quiz_id):
         questions = str(new_sitting.question_order)
         questions = questions.split(',')
         try:
-            new_sitting.start_time = datetime.now()
-            new_sitting.end_time = datetime.now() + timedelta(minutes=int(quiz.duration))
-            milliseconds = time.mktime(new_sitting.end_time.timetuple()) * 1000
-            new_sitting.save()
+            if new_sitting.start_time is None:
+                new_sitting.start_time = datetime.now()
+                new_sitting.end_time = datetime.now() + timedelta(minutes=int(quiz.duration))
+                milliseconds = time.mktime(new_sitting.end_time.timetuple()) * 1000
+                new_sitting.save()
+            else:
+                print 'in here'
+                milliseconds = new_sitting.end_time - timezone.now()
+                milliseconds = datetime.now() + milliseconds
+                milliseconds = time.mktime(milliseconds.timetuple())
+                print 1
+                if milliseconds <= 0:
+                    milliseconds = 0
+                else:
+                    milliseconds *= 1000
+
         except:
             print "Session Object creation failed"
             allowed = False
@@ -56,9 +68,22 @@ def start_quiz(request, quiz_id):
     return render_to_response('mcqs/quiz_form.html', locals(), context_instance=RequestContext(request))
 
 
+def exit_quiz(request, quiz_id):
+    new_sitting = None
+    quiz = QuizModel.objects.get(id=quiz_id)
+    new_sitting = Sitting.objects.user_sitting(request.user, quiz)
+    try:
+        new_sitting.complete = True
+        new_sitting.save()
+    except:
+        print 'Saving failed'
+    return render_to_response('quizz/results.html', locals(), context_instance=RequestContext(request))
+
+
 def quiz_take(request, quiz):
     if request.user.is_authenticated():
         quiz = QuizModel.objects.get(url=quiz)
+        new_sitting = Sitting.objects.user_sitting(request.user, quiz)
         try:
             user = quiz.participants.get(username=request.user.username)
         except Exception:
@@ -67,14 +92,17 @@ def quiz_take(request, quiz):
         start = quiz.start_time
         end = quiz.end_time
         count = quiz.participants.count()
-        if user is None and start <= now < end:
+        if user is None and start <= now < end and new_sitting.complete is False:
             message = "Register"
         else:
-            if now > start:
+            if now > start and new_sitting.complete is False:
                 message = "Started"
-            if now > end:
-                message = "Ended"
-            if now < start:
+            if new_sitting.complete is True:
+                if now >= end:
+                    message = "Ended"
+                else:
+                    message = "Completed"
+            if now < start and new_sitting.complete is False:
                 message = "Participated"
                 # start_quiz(quiz, request)
     else:

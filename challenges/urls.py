@@ -25,6 +25,7 @@ urlpatterns = patterns('',
                        url(r'^quiz/(?P<quiz>[-_\w]+)/$', quizz.views.quiz_take, name='quiz_take'),
                        url(r'^register/(?P<quiz_id>\d)/$', quizz.views.register),
                        url(r'^start/(?P<quiz_id>\d)/$', quizz.views.start_quiz),
+                       url(r'^end/(?P<quiz_id>\d)/$', quizz.views.exit_quiz),
 
                        # sitting view
                        url(r'^sitting/(?P<id>\d)/$', SittingDetailView.as_view(), name='sitting_details'),
